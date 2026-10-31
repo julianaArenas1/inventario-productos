@@ -123,7 +123,7 @@ inventario-productos/
 
 ## Publicación en IIS · Sitio y verificación
 
-**Responsable:** Heyner Mena Campaña · **Fecha:** COMPLETAR_FECHA
+**Responsable:** Heyner Mena Campaña · **Fecha:** 31/10/2026
 
 Esta parte toma la aplicación publicada y el Application Pool que dejó listos Alexis (carpeta `C:\inetpub\inventario-productos` y grupo `inventario-productos-pool`), crea el sitio en IIS, lo deja respondiendo en un puerto propio y verifica la aplicación en local. Los pasos están en [`deploy/iis/crear-sitio-iis.ps1`](deploy/iis/crear-sitio-iis.ps1).
 
@@ -191,7 +191,13 @@ Para republicar, detener primero el Application Pool (evita archivos bloqueados)
 
 ### Problema encontrado en nuestro despliegue
 
-COMPLETAR_PROBLEMA: describir el error real que apareció (código y mensaje), su causa y cómo se resolvió.
+Para documentar el error más común de la tabla, reprodujimos **a propósito** el **HTTP Error 403.14 - Forbidden**: cambiamos la *Ruta de acceso física* del sitio a una carpeta vacía (`C:\inetpub\vacio`) y recargamos http://localhost:8080. IIS respondió 403.14 (módulo `DirectoryListingModule`) porque en esa carpeta no hay documento predeterminado ni `web.config` y el listado de directorios está desactivado.
+
+![Error 403.14](evidencias/iis/10-problema-403-14.png)
+
+Se resolvió corrigiendo la ruta física del sitio a `C:\inetpub\inventario-productos`. Tras recargar, la aplicación y `/health` volvieron a responder.
+
+![Problema resuelto](evidencias/iis/11-problema-resuelto.png)
 
 ## Publicación en Azure · Recursos y publicación
 
