@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore
+
+      - name: Compilar proyecto
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publicar aplicación
+        run: dotnet publish --configuration Release --no-build --output publish
+
+      - name: Guardar artefacto publicado
+        uses: actions/upload-artifact@v4
+        with:
+          name: inventario-productos
+          path: publish/
