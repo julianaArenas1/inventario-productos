@@ -570,7 +570,7 @@ oalarconpe
 
 ## Video de evidencia
 
-**Pendiente de agregar el enlace final del video.**
+https://youtu.be/rBLwyJyLqto
 
 ---
 
