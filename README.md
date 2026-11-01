@@ -183,39 +183,73 @@ El pipeline fue ejecutado correctamente antes de integrar los cambios a `main`.
 
 La aplicación fue publicada en Windows 11 utilizando IIS.
 
-Se habilitó IIS y se instaló el **ASP.NET Core Hosting Bundle para .NET 8**.
+Pasos realizados:
 
-Se verificó la disponibilidad del módulo:
+1. Se habilitó IIS desde las características de Windows y se verificó la página de bienvenida en `http://localhost`.
+2. Se instaló el **ASP.NET Core Hosting Bundle 8.0.33** y se reinició IIS:
 
-```text
-AspNetCoreModuleV2
+```powershell
+net stop was /y
+net start w3svc
 ```
 
-Posteriormente se publicó la aplicación en:
+3. Se verificó en el Administrador de IIS (sección Módulos) que estuviera disponible el módulo `AspNetCoreModuleV2`.
+4. Se creó el Application Pool `inventario-productos-pool`.
+5. Se publicó la aplicación en `C:\inetpub\inventario-productos`:
 
-```text
-C:\inetpub\inventario-productos
+```powershell
+dotnet publish CrudApp.csproj -c Release -o C:\inetpub\inventario-productos
 ```
 
-Se creó el Application Pool:
+6. Se asignó al Application Pool el permiso de **Modificar** sobre la carpeta publicada:
 
-```text
-inventario-productos-pool
+```powershell
+icacls C:\inetpub\inventario-productos /grant "IIS AppPool\inventario-productos-pool:(OI)(CI)M"
 ```
+
+Configuración del Application Pool:
 
 | Propiedad | Valor |
 | --- | --- |
+| Nombre | `inventario-productos-pool` |
 | .NET CLR | Sin código administrado |
 | Canalización | Integrada |
 | Estado | Iniciado |
 
-El Application Pool cuenta con permiso de **Modificar** sobre la carpeta publicada, necesario porque la aplicación crea y modifica el archivo SQLite `app.db`.
+El Application Pool se configuró en **Sin código administrado** porque ASP.NET Core no utiliza el CLR de .NET Framework. La aplicación se ejecuta con el runtime de .NET 8 y IIS le entrega las peticiones mediante `AspNetCoreModuleV2`.
 
-Los comandos utilizados se encuentran documentados en:
+El permiso de **Modificar** es necesario porque la aplicación crea y actualiza el archivo SQLite `app.db` al iniciar (`Database.Migrate()`). Con permiso solo de lectura, la aplicación no podría crear la base de datos y fallaría al arrancar.
 
-```text
-deploy/iis/instalar-iis.ps1
+#### Reproducir la instalación en otro equipo
+
+Todos los pasos anteriores quedaron automatizados en `deploy/iis/instalar-iis.ps1`. Se ejecuta en Windows PowerShell como administrador, desde la raíz del repositorio:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\deploy\iis\instalar-iis.ps1
 ```
+
+El script habilita IIS, verifica el SDK de .NET y el Hosting Bundle, crea el Application Pool, publica la aplicación y asigna los permisos. Se puede ejecutar de nuevo para republicar: detiene el Application Pool, publica la nueva versión y lo vuelve a iniciar.
+
+#### Problemas encontrados
+
+| Problema | Causa | Solución |
+| --- | --- | --- |
+| Puerto 8080 ocupado en el equipo de esta parte | El servicio `MTAgentService` (MiniTool ShadowMaker) estaba escuchando en ese puerto. Se identificó con `netstat -ano \| findstr :8080` y `Get-Process -Id <PID>` | No se detuvo el servicio. Se verificó que el puerto 8085 estaba libre como alternativa |
+| Git mostraba `detected dubious ownership in repository` | El repositorio se clonó desde PowerShell como administrador y la carpeta quedó a nombre del grupo Administradores | Se marcó la carpeta como segura con `git config --global --add safe.directory C:/Users/<usuario>/source/inventario-productos` |
+
+#### Evidencias de esta parte
+
+| Archivo | Contenido |
+| --- | --- |
+| `01-iis-habilitado.png` | Página de bienvenida de IIS en `localhost` |
+| `02a-hosting-bundle-instalado.png` | Instalación del Hosting Bundle 8.0.33 |
+| `02b-reinicio-iis.png` | Reinicio de IIS después de la instalación |
+| `02-modulo-aspnetcore.png` | Módulo `AspNetCoreModuleV2` en IIS |
+| `03a-script-publicacion.png` | Ejecución de `instalar-iis.ps1` |
+| `03-carpeta-publicada.png` y `03-carpeta-publicada-2.png` | Archivos publicados (`CrudApp.dll`, `web.config`, `wwwroot`) |
+| `03b-permisos-carpeta.png` | Permiso de Modificar del Application Pool |
+| `04-app-pool.png` | Application Pool creado |
 
 ---
 
