@@ -1,32 +1,41 @@
 # Inventario de Productos
 
-Aplicación web para la gestión de productos mediante operaciones CRUD (crear, consultar, editar y eliminar), desarrollada con ASP.NET Core MVC sobre .NET 8.
+Aplicación web para la gestión de productos mediante operaciones CRUD (crear, consultar, editar y eliminar), desarrollada con **ASP.NET Core MVC sobre .NET 8**, **Entity Framework Core** y **SQLite**.
 
-Este proyecto será utilizado por el equipo Los Indesplegables para realizar la publicación y verificación de la aplicación en IIS y Azure App Service.
+Este proyecto fue utilizado por el equipo **Los Indesplegables** para realizar la publicación y verificación de la aplicación en **IIS (on-premises)** y **Azure App Service**, como parte de la Práctica 3 de Despliegue de Software.
+
+---
 
 ## Equipo
 
 **Los Indesplegables**
 
-| Integrante | Responsabilidad principal |
-| --- | --- |
-| Juliana Arenas Arias | Preparación de la aplicación, endpoint /health, configuración por entorno e integración continua |
-| Oscar Alexis Pineda Henao | IIS: instalación, Hosting Bundle, publicación y Application Pool |
-| Heyner Mena Campaña | IIS: sitio, puerto, punto de entrada, verificación y solución de problemas |
-| Camilo Ospina Hernández | Azure: creación de recursos y publicación en App Service |
-| Juan Andres Ramirez Castañeda | Azure: Application Settings, HTTPS Only y verificación pública |
+| Integrante | Responsabilidad principal | Contribución verificable |
+| --- | --- | --- |
+| **Juliana Arenas Arias** | Preparación de la aplicación, endpoint `/health`, configuración por entorno e integración continua | Rama `juliana/preparacion-app` · PR #1 fusionado por Camilo · preparación de la aplicación y pipeline CI |
+| **Oscar Alexis Pineda Henao** | IIS: instalación, Hosting Bundle, publicación y Application Pool | Rama `alexis/iis-instalacion` · PR #2 fusionado por Heyner · `deploy/iis/instalar-iis.ps1` y evidencias IIS 01–04 |
+| **Heyner Mena Campaña** | IIS: sitio, puerto, `web.config`, verificación y solución de problemas | Rama `heyner/iis-sitio` · `deploy/iis/crear-sitio-iis.ps1`, evidencias IIS 05–11 y documentación |
+| **Camilo Ospina Hernández** | Azure: grupo de recursos, App Service y publicación | Rama `camilo/azure-publicacion` · PR #3 fusionado por Juan · `deploy/azure/publicar.ps1` y evidencias Azure 01–04b |
+| **Juan Andrés Ramírez Castañeda** | Azure: Application Settings, HTTPS Only y verificación pública | Rama `juan/azure-configuracion` · evidencias Azure 05–09 y documentación de verificación |
+
+---
 
 ## Tecnología utilizada
 
-- ASP.NET Core MVC
-- .NET 8
-- C#
-- Entity Framework Core
-- SQLite
-- Bootstrap
-- IIS
-- Azure App Service
-- GitHub Actions
+| Componente | Tecnología |
+| --- | --- |
+| Backend | ASP.NET Core MVC |
+| Runtime | .NET 8 |
+| Lenguaje | C# |
+| ORM | Entity Framework Core |
+| Base de datos | SQLite |
+| Frontend | Razor Views, HTML y Bootstrap |
+| Servidor local | IIS |
+| Nube | Azure App Service |
+| Integración continua | GitHub Actions |
+| Control de versiones | Git y GitHub |
+
+---
 
 ## Funcionalidad
 
@@ -37,20 +46,30 @@ La aplicación permite:
 - Editar productos existentes.
 - Consultar el detalle de un producto.
 - Eliminar productos.
-- Validar la disponibilidad de la aplicación mediante `/health`.
+- Verificar el estado y entorno del despliegue mediante `/health`.
+
+---
 
 ## Estructura del repositorio
 
 ```text
 inventario-productos/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── Controllers/
 ├── Data/
 ├── Migrations/
 ├── Models/
 ├── Views/
+├── wwwroot/
+│   └── index.html
 ├── deploy/
 │   ├── iis/
+│   │   ├── instalar-iis.ps1
+│   │   └── crear-sitio-iis.ps1
 │   └── azure/
+│       └── publicar.ps1
 ├── evidencias/
 │   ├── iis/
 │   └── azure/
@@ -58,168 +77,288 @@ inventario-productos/
 ├── CrudApp.csproj
 ├── appsettings.json
 └── README.md
-cat > README.md <<'EOF'
-# Inventario de Productos
-
-Aplicación web para la gestión de productos mediante operaciones CRUD (crear, consultar, editar y eliminar), desarrollada con ASP.NET Core MVC sobre .NET 8.
-
-Este proyecto será utilizado por el equipo Los Indesplegables para realizar la publicación y verificación de la aplicación en IIS y Azure App Service.
-
-## Equipo
-
-**Los Indesplegables**
-
-| Integrante | Responsabilidad principal |
-| --- | --- |
-| Juliana Arenas Arias | Preparación de la aplicación, endpoint /health, configuración por entorno e integración continua |
-| Oscar Alexis Pineda Henao | IIS: instalación, Hosting Bundle, publicación y Application Pool |
-| Heyner Mena Campaña | IIS: sitio, puerto, punto de entrada, verificación y solución de problemas |
-| Camilo Ospina Hernández | Azure: creación de recursos y publicación en App Service |
-| Juan Andres Ramirez Castañeda | Azure: Application Settings, HTTPS Only y verificación pública |
-
-## Tecnología utilizada
-
-- ASP.NET Core MVC
-- .NET 8
-- C#
-- Entity Framework Core
-- SQLite
-- Bootstrap
-- IIS
-- Azure App Service
-- GitHub Actions
-
-## Funcionalidad
-
-La aplicación permite:
-
-- Consultar productos.
-- Crear nuevos productos.
-- Editar productos existentes.
-- Consultar el detalle de un producto.
-- Eliminar productos.
-- Validar la disponibilidad de la aplicación mediante `/health`.
-
-## Estructura del repositorio
-
-```text
-inventario-productos/
-├── Controllers/
-├── Data/
-├── Migrations/
-├── Models/
-├── Views/
-├── deploy/
-│   ├── iis/
-│   └── azure/
-├── evidencias/
-│   ├── iis/
-│   └── azure/
-├── Program.cs
-├── CrudApp.csproj
-├── appsettings.json
-└── README.md
-
-
-## Publicación en IIS · Sitio y verificación
-
-**Responsable:** Heyner Mena Campaña · **Fecha:** 31/10/2026
-
-Esta parte toma la aplicación publicada y el Application Pool que dejó listos Alexis (carpeta `C:\inetpub\inventario-productos` y grupo `inventario-productos-pool`), crea el sitio en IIS, lo deja respondiendo en un puerto propio y verifica la aplicación en local. Los pasos están en [`deploy/iis/crear-sitio-iis.ps1`](deploy/iis/crear-sitio-iis.ps1).
-
-### Sitio y enlace
-
-| Elemento | Valor |
-| --- | --- |
-| Nombre del sitio | `inventario-productos` |
-| Grupo de aplicaciones | `inventario-productos-pool` |
-| Ruta física | `C:\inetpub\inventario-productos` |
-| Enlace | `http`, IP «Todas las no asignadas», puerto **8080**, nombre de host vacío |
-| URL de la aplicación | http://localhost:8080 |
-| URL de verificación | http://localhost:8080/health |
-
-Antes de crear el sitio se comprobó con `netstat -ano | findstr :8080` que el puerto estuviera libre (sin resultados).
-
-![Configuración del sitio](evidencias/iis/05-sitio-configuracion.png)
-
-![Enlace y puerto](evidencias/iis/06-binding-puerto.png)
-
-### Punto de entrada (`web.config`)
-
-`dotnet publish` genera un `web.config` en la carpeta publicada. Su etiqueta `aspNetCore` es el punto de entrada: le dice a IIS cómo arrancar la aplicación y le entrega todas las peticiones.
-
-```xml
-<aspNetCore processPath="dotnet" arguments=".\CrudApp.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="inprocess" />
 ```
 
-| Atributo | Valor | Qué significa |
-| --- | --- | --- |
-| `processPath` | `dotnet` | Programa que ejecuta la aplicación (el runtime de .NET) |
-| `arguments` | `.\CrudApp.dll` | Ensamblado de la aplicación que arranca |
-| `hostingModel` | `inprocess` | La app corre dentro del proceso de IIS (`w3wp.exe`), sin servidor Kestrel aparte |
+---
 
-IIS no sirve las páginas por sí mismo: el módulo ASP.NET Core (`AspNetCoreModuleV2`) recibe cada petición y la pasa a la aplicación, que sirve `wwwroot/index.html` en «/» gracias a `UseDefaultFiles()` y `UseStaticFiles()`.
+## Ejecución local
 
-![web.config](evidencias/iis/07-punto-entrada-webconfig.png)
+Restaurar las dependencias:
 
-### Verificación
+```bash
+dotnet restore
+```
 
-| URL | Respuesta esperada |
+Aplicar las migraciones manualmente, si es necesario:
+
+```bash
+dotnet ef database update
+```
+
+Ejecutar la aplicación:
+
+```bash
+dotnet run
+```
+
+La aplicación queda disponible en:
+
+```text
+http://localhost:5000
+```
+
+El endpoint de verificación es:
+
+```text
+http://localhost:5000/health
+```
+
+La aplicación también ejecuta automáticamente las migraciones de Entity Framework mediante `Database.Migrate()` al iniciar, permitiendo crear la base SQLite si todavía no existe.
+
+---
+
+## Preparación de la aplicación e integración continua
+
+**Responsable:** Juliana Arenas Arias
+
+Antes de realizar los despliegues se preparó la aplicación para funcionar en ambos ambientes.
+
+Se realizaron los siguientes cambios:
+
+- Se agregó el endpoint `/health`.
+- Se agregó la configuración `DeployTarget`.
+- Se agregó `wwwroot/index.html` como página inicial.
+- Se habilitaron `UseDefaultFiles()` y `UseStaticFiles()`.
+- Se configuró la aplicación automática de migraciones de SQLite.
+- Se creó un pipeline de integración continua con GitHub Actions.
+
+La configuración local contiene:
+
+```json
+"DeployTarget": "IIS (local)"
+```
+
+El endpoint `/health` devuelve:
+
+```json
+{
+  "status": "OK",
+  "environment": "Production",
+  "deployTarget": "IIS (local)"
+}
+```
+
+---
+
+## Integración continua
+
+El workflow se encuentra en:
+
+```text
+.github/workflows/ci.yml
+```
+
+El pipeline se ejecuta en cada Pull Request y en cada push hacia `main`.
+
+El proceso realiza:
+
+1. Descarga del repositorio.
+2. Configuración de .NET 8.
+3. Restauración de dependencias.
+4. Compilación en modo Release.
+5. Publicación de la aplicación.
+6. Almacenamiento del resultado como artefacto.
+
+El pipeline fue ejecutado correctamente antes de integrar los cambios a `main`.
+
+---
+
+## Publicación en IIS
+
+**Fecha de publicación:** 31 de octubre de 2026
+
+### Instalación, publicación y Application Pool
+
+**Responsable:** Oscar Alexis Pineda Henao
+
+La aplicación fue publicada en Windows 11 utilizando IIS.
+
+Pasos realizados:
+
+1. Se habilitó IIS desde las características de Windows y se verificó la página de bienvenida en `http://localhost`.
+2. Se instaló el **ASP.NET Core Hosting Bundle 8.0.33** y se reinició IIS:
+
+```powershell
+net stop was /y
+net start w3svc
+```
+
+3. Se verificó en el Administrador de IIS (sección Módulos) que estuviera disponible el módulo `AspNetCoreModuleV2`.
+4. Se creó el Application Pool `inventario-productos-pool`.
+5. Se publicó la aplicación en `C:\inetpub\inventario-productos`:
+
+```powershell
+dotnet publish CrudApp.csproj -c Release -o C:\inetpub\inventario-productos
+```
+
+6. Se asignó al Application Pool el permiso de **Modificar** sobre la carpeta publicada:
+
+```powershell
+icacls C:\inetpub\inventario-productos /grant "IIS AppPool\inventario-productos-pool:(OI)(CI)M"
+```
+
+Configuración del Application Pool:
+
+| Propiedad | Valor |
 | --- | --- |
-| http://localhost:8080 | Página inicial de Inventario de Productos |
-| http://localhost:8080/health | `{"status":"OK","environment":"Production","deployTarget":"IIS (local)"}` |
+| Nombre | `inventario-productos-pool` |
+| .NET CLR | Sin código administrado |
+| Canalización | Integrada |
+| Estado | Iniciado |
 
-`environment` es `Production` porque IIS no define `ASPNETCORE_ENVIRONMENT`, y `deployTarget` viene de `appsettings.json`; en Azure ese valor se sobrescribe con un Application Setting.
+El Application Pool se configuró en **Sin código administrado** porque ASP.NET Core no utiliza el CLR de .NET Framework. La aplicación se ejecuta con el runtime de .NET 8 y IIS le entrega las peticiones mediante `AspNetCoreModuleV2`.
 
-![Aplicación en localhost](evidencias/iis/08-app-localhost.png)
+El permiso de **Modificar** es necesario porque la aplicación crea y actualiza el archivo SQLite `app.db` al iniciar (`Database.Migrate()`). Con permiso solo de lectura, la aplicación no podría crear la base de datos y fallaría al arrancar.
 
-![/health en localhost](evidencias/iis/09-health-localhost.png)
+#### Reproducir la instalación en otro equipo
 
-### Solución de problemas
+Todos los pasos anteriores quedaron automatizados en `deploy/iis/instalar-iis.ps1`. Se ejecuta en Windows PowerShell como administrador, desde la raíz del repositorio:
 
-| Síntoma | Causa probable | Solución |
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\deploy\iis\instalar-iis.ps1
+```
+
+El script habilita IIS, verifica el SDK de .NET y el Hosting Bundle, crea el Application Pool, publica la aplicación y asigna los permisos. Se puede ejecutar de nuevo para republicar: detiene el Application Pool, publica la nueva versión y lo vuelve a iniciar.
+
+#### Problemas encontrados
+
+| Problema | Causa | Solución |
 | --- | --- | --- |
-| Error 500.19 | Falta el Hosting Bundle o el `web.config` es inválido | Instalar el Hosting Bundle y reiniciar IIS (`net stop was /y` y `net start w3svc`) |
-| Error 500.30 / 500.31 | La app no arranca o falta el runtime de .NET | Activar `stdoutLogEnabled="true"` en `web.config`, crear la carpeta `logs` y leer el log; desactivarlo al terminar |
-| Error 403.14 | La ruta física no apunta a la carpeta publicada | Corregir la ruta del sitio |
-| 404 en «/» | La app no tiene página inicial | Revisar `wwwroot/index.html` y `UseDefaultFiles()` |
-| El sitio no inicia | Puerto ocupado | Cambiar el enlace a otro puerto |
-| Acceso denegado | Permisos de la carpeta | Agregar `IIS AppPool\inventario-productos-pool` a la carpeta |
-| 500.30 con SQLite (propio de esta app) | La app crea `app.db` al iniciar y el Application Pool no puede escribir en la carpeta | Dar al Application Pool permiso de **Modificar**, no solo lectura |
+| Puerto 8080 ocupado en el equipo de esta parte | El servicio `MTAgentService` (MiniTool ShadowMaker) estaba escuchando en ese puerto. Se identificó con `netstat -ano \| findstr :8080` y `Get-Process -Id <PID>` | No se detuvo el servicio. Se verificó que el puerto 8085 estaba libre como alternativa |
+| Git mostraba `detected dubious ownership in repository` | El repositorio se clonó desde PowerShell como administrador y la carpeta quedó a nombre del grupo Administradores | Se marcó la carpeta como segura con `git config --global --add safe.directory C:/Users/<usuario>/source/inventario-productos` |
 
-Para republicar, detener primero el Application Pool (evita archivos bloqueados) y volver a iniciarlo al terminar.
+#### Evidencias de esta parte
 
-### Problema encontrado en nuestro despliegue
+| Archivo | Contenido |
+| --- | --- |
+| `01-iis-habilitado.png` | Página de bienvenida de IIS en `localhost` |
+| `02a-hosting-bundle-instalado.png` | Instalación del Hosting Bundle 8.0.33 |
+| `02b-reinicio-iis.png` | Reinicio de IIS después de la instalación |
+| `02-modulo-aspnetcore.png` | Módulo `AspNetCoreModuleV2` en IIS |
+| `03a-script-publicacion.png` | Ejecución de `instalar-iis.ps1` |
+| `03-carpeta-publicada.png` y `03-carpeta-publicada-2.png` | Archivos publicados (`CrudApp.dll`, `web.config`, `wwwroot`) |
+| `03b-permisos-carpeta.png` | Permiso de Modificar del Application Pool |
+| `04-app-pool.png` | Application Pool creado |
 
-Para documentar el error más común de la tabla, reprodujimos **a propósito** el **HTTP Error 403.14 - Forbidden**: cambiamos la *Ruta de acceso física* del sitio a una carpeta vacía (`C:\inetpub\vacio`) y recargamos http://localhost:8080. IIS respondió 403.14 (módulo `DirectoryListingModule`) porque en esa carpeta no hay documento predeterminado ni `web.config` y el listado de directorios está desactivado.
+---
 
-![Error 403.14](evidencias/iis/10-problema-403-14.png)
+### Sitio, puerto y verificación
 
-Se resolvió corrigiendo la ruta física del sitio a `C:\inetpub\inventario-productos`. Tras recargar, la aplicación y `/health` volvieron a responder.
+**Responsable:** Heyner Mena Campaña
 
-![Problema resuelto](evidencias/iis/11-problema-resuelto.png)
+Se creó el sitio:
 
-## Publicación en Azure · Recursos y publicación
+```text
+inventario-productos
+```
 
-**Responsable:** Camilo Ospina Hernández · **Fecha de publicación:** 31/10/2026
+con la siguiente configuración:
 
-### Recursos creados
+| Propiedad | Valor |
+| --- | --- |
+| Application Pool | `inventario-productos-pool` |
+| Ruta física | `C:\inetpub\inventario-productos` |
+| Protocolo | HTTP |
+| Puerto | `8080` |
+| IP | Todas las no asignadas |
+
+La aplicación se encuentra disponible en:
+
+```text
+http://localhost:8080
+```
+
+El estado puede verificarse mediante:
+
+```text
+http://localhost:8080/health
+```
+
+Respuesta esperada:
+
+```json
+{
+  "status": "OK",
+  "environment": "Production",
+  "deployTarget": "IIS (local)"
+}
+```
+
+Los comandos relacionados con la creación del sitio se encuentran en:
+
+```text
+deploy/iis/crear-sitio-iis.ps1
+```
+
+---
+
+## Problema verificado en IIS
+
+Durante las pruebas se reprodujo:
+
+```text
+HTTP Error 403.14 Forbidden
+```
+
+La ruta física del sitio fue modificada temporalmente para apuntar a una carpeta vacía.
+
+IIS no encontró un documento predeterminado ni el archivo `web.config`, por lo que respondió con el error 403.14.
+
+La solución consistió en restaurar la ruta correcta:
+
+```text
+C:\inetpub\inventario-productos
+```
+
+Después de corregirla, la aplicación volvió a responder correctamente.
+
+---
+
+## Publicación en Azure App Service
+
+**Fecha de publicación:** 31 de octubre de 2026
+
+### Recursos y publicación
+
+**Responsable:** Camilo Ospina Hernández
+
+Se creó la infraestructura necesaria utilizando una suscripción **Azure for Students**.
 
 | Elemento | Valor |
 | --- | --- |
 | Suscripción | Azure for Students |
 | Grupo de recursos | `rg-inventario-productos` |
 | App Service | `inventario-productos-itm` |
-| Plan de App Service | `plan-inventario` · Free F1 · Windows |
+| App Service Plan | `plan-inventario` |
+| Plan | Free F1 |
+| Sistema operativo | Windows |
 | Región | Brazil South |
-| Pila | .NET 8 (LTS) |
-| URL pública | https://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net |
+| Runtime | .NET 8 |
 
-El acceso de Juan Andrés Ramírez se dio con el rol **Colaborador** en el grupo de recursos (Control de acceso IAM), sin compartir contraseñas.
+URL pública:
 
-### Publicación
+https://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net
 
-Se publicó con Azure CLI y despliegue zip (OneDeploy). Los comandos están en [`deploy/azure/publicar.ps1`](deploy/azure/publicar.ps1):
+La aplicación fue publicada mediante Azure CLI utilizando despliegue ZIP.
+
+Los comandos utilizados se encuentran en:
+
+```text
+deploy/azure/publicar.ps1
+```
+
+Flujo utilizado:
 
 ```powershell
 az login
@@ -229,26 +368,218 @@ Compress-Archive -Path publish\* -DestinationPath app.zip -Force
 az webapp deploy --resource-group rg-inventario-productos --name inventario-productos-itm --src-path app.zip --type zip
 ```
 
-Resultado: `provisioningState: Succeeded`. La verificación inmediata de `/health` respondió `{"status":"OK","environment":"Production","deployTarget":"IIS (local)"}`; el valor `IIS (local)` viene de `appsettings.json` y se reemplaza en Azure con el Application Setting que configura Juan.
+El despliegue finalizó con:
 
-App Service en Windows también corre sobre IIS, administrado por Azure: la respuesta HTTP incluye `Server: Microsoft-IIS/10.0`.
+```text
+provisioningState: Succeeded
+```
 
-### Problemas encontrados y solución
+También se verificó el funcionamiento completo del CRUD en Azure, incluida la creación y consulta de productos mediante SQLite.
 
-| Problema | Causa | Solución |
-| --- | --- | --- |
-| `Resource was disallowed by Azure` al crear en South Central US y East US | La suscripción Azure for Students tiene la política `sys.regionrestriction`, que solo permite westus2, brazilsouth, spaincentral, northcentralus y francecentral | Consultar la política con `az policy assignment show --name sys.regionrestriction --query parameters` y elegir una región permitida |
-| `Operation cannot be completed without additional quota (F1 VMs): 0` | La cuota del plan gratuito F1 es 0 en algunas regiones permitidas | Probar otra región permitida; en **Brazil South** sí había cuota F1 |
-| `SubscriptionNotFound` al desplegar | La CLI tenía guardada una suscripción distinta | `az login` y seleccionar *Azure for Students* (`az account set`) |
+---
 
-### Evidencias (`evidencias/azure/`)
+## Problemas encontrados en Azure
 
-| Archivo | Qué muestra |
+### Restricción de regiones
+
+Los primeros intentos en **East US** y **South Central US** fueron rechazados por la política:
+
+```text
+sys.regionrestriction
+```
+
+Se seleccionó finalmente:
+
+```text
+Brazil South
+```
+
+### Cuota del plan F1
+
+En algunas regiones la cuota disponible para el plan Free F1 era cero.
+
+En Brazil South sí existía disponibilidad para crear el App Service Plan.
+
+### SubscriptionNotFound
+
+Azure CLI tenía seleccionada una suscripción diferente.
+
+Se solucionó ejecutando nuevamente:
+
+```powershell
+az login
+```
+
+y seleccionando la suscripción:
+
+```text
+Azure for Students
+```
+
+---
+
+## Configuración y verificación en Azure
+
+**Responsable:** Juan Andrés Ramírez Castañeda
+
+Se configuraron las siguientes variables de entorno:
+
+| Variable | Valor |
 | --- | --- |
-| `01-grupo-recursos.png` | Grupo de recursos `rg-inventario-productos` creado en Azure for Students |
-| `02-plan-app-service.png` | Plan `plan-inventario`: Brazil South, Windows, Free F1 |
-| `02a-intento-east-us.png` | Primer intento de creación en East US, bloqueado por la política de regiones |
-| `03-app-service-overview.png` | App Service en ejecución: grupo, región, plan F1, .NET 8 y URL |
-| `04-publicacion-exitosa.png` | Página inicial cargando en la URL pública de Azure |
-| `04a-crud-listado-azure.png` | Listado de productos funcionando en Azure (escritura en SQLite) |
-| `04b-crud-crear-producto-azure.png` | Formulario de creación de producto en Azure |
+| `ASPNETCORE_ENVIRONMENT` | `Production` |
+| `DeployTarget` | `Azure App Service` |
+
+El valor `DeployTarget` configurado en Azure sobrescribe el valor `IIS (local)` definido en `appsettings.json`.
+
+---
+
+## HTTPS
+
+Se habilitó:
+
+```text
+HTTPS Only
+```
+
+También se verificó una versión mínima TLS 1.2.
+
+Al realizar una solicitud mediante HTTP:
+
+```powershell
+curl.exe -I http://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net/
+```
+
+Azure responde:
+
+```text
+HTTP/1.1 301 Moved Permanently
+Location: https://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net/
+```
+
+Esto confirma que el tráfico HTTP es redirigido automáticamente a HTTPS.
+
+---
+
+## Cómo verificar el despliegue
+
+### IIS
+
+Aplicación:
+
+```text
+http://localhost:8080
+```
+
+Estado:
+
+```text
+http://localhost:8080/health
+```
+
+Respuesta:
+
+```json
+{
+  "status": "OK",
+  "environment": "Production",
+  "deployTarget": "IIS (local)"
+}
+```
+
+### Azure App Service
+
+Aplicación:
+
+https://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net/
+
+Estado:
+
+https://inventario-productos-itm-gnf0fresfydyhrgg.brazilsouth-01.azurewebsites.net/health
+
+Respuesta:
+
+```json
+{
+  "status": "OK",
+  "environment": "Production",
+  "deployTarget": "Azure App Service"
+}
+```
+
+La diferencia entre `IIS (local)` y `Azure App Service` permite verificar que la misma aplicación fue publicada correctamente en dos entornos diferentes.
+
+---
+
+## Evidencias
+
+Las evidencias se encuentran organizadas en:
+
+```text
+evidencias/
+├── iis/
+└── azure/
+```
+
+### Evidencias de IIS
+
+Incluyen:
+
+- IIS habilitado.
+- Hosting Bundle.
+- `AspNetCoreModuleV2`.
+- Carpeta publicada.
+- Scripts utilizados.
+- Permisos de la carpeta.
+- Application Pool.
+- Sitio.
+- Binding y puerto.
+- `web.config`.
+- Aplicación funcionando.
+- `/health`.
+- Error 403.14 y solución.
+
+### Evidencias de Azure
+
+Incluyen:
+
+- Grupo de recursos.
+- App Service Plan.
+- Restricción de región encontrada.
+- App Service.
+- Publicación exitosa.
+- CRUD funcionando.
+- Application Settings.
+- HTTPS Only.
+- URL pública.
+- `/health`.
+- Redirección HTTP hacia HTTPS.
+
+---
+
+## Repositorio
+
+https://github.com/julianaArenas1/inventario-productos
+
+El repositorio fue compartido con el usuario de GitHub del docente:
+
+```text
+oalarconpe
+```
+
+---
+
+## Video de evidencia
+
+https://youtu.be/rBLwyJyLqto
+
+---
+
+## Origen del proyecto base
+
+Este proyecto parte de la aplicación pública **C# CRUD Web Application**:
+
+https://github.com/peak-flow/csharp
+
+El proyecto original se distribuye bajo licencia MIT.
+
+A partir de esta base, el equipo realizó las adaptaciones, configuraciones, scripts, documentación y actividades de despliegue necesarias para publicar la aplicación en IIS y Azure App Service.
